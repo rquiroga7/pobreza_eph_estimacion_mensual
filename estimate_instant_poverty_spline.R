@@ -58,7 +58,7 @@ for (i in 3:nrow(df)) {
   #spline_interpolation <- splinefun(x = as.numeric(df_subset$median_date), y = df_subset$poverty, method = "fmm")
   
   # Predict the poverty value for the date 90 days in the future
-  future_date <- df$median_date[i] + 60
+  future_date <- df$median_date[i] + 75
   predicted_values[i] <- spline_interpolation(as.numeric(future_date))
 }
 
