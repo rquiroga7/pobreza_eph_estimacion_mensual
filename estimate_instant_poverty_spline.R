@@ -5,6 +5,7 @@ library(ggplot2)
 library(ggborderline)
 library(tidyverse)
 library(stringr)
+library(ggrepel)
 
 # Create a sequence of months
 months <- c(4:12, rep(1:12, 6), 1:9)
@@ -87,12 +88,17 @@ df_long$variable <- factor(df_long$variable, levels = c("poverty", "predicted_po
                            labels = c("Nowcast pobreza semestral (Rozada)", "Predicción instantánea mensual", "Promedio semestral de la predicción mensual"))
 # Plot the data
 ggplot(df_long, aes(x = first_day, y = value, color = variable)) +
-  geom_line() +
+  geom_borderline() +
   scale_y_continuous(breaks = seq(0, 60, by = 2.5), minor_breaks = NULL, labels = function(x) paste0(x, "%")) +
   scale_x_date(limits = c(as.Date("2017-01-01"), as.Date("2024-03-01")), date_labels = "%Y") +
-  labs(title = "Predicción instantánea mensual de la Pobreza utilizando Splines", x = "Mes", y = "Pobreza") +
+  labs(title = "Predicción instantánea mensual de la Pobreza en Argentina utilizando Splines", x = "Mes", y = "Pobreza") +
   labs(caption = str_wrap("Por R. Quiroga tomando como base la estimación central del Nowcast de pobreza semestral de Martín Rozada. Predicción utilizando el método de Splines 'monoH.FC'. Se agrega el promedio de los últimos seis valores predichos, es decir un rolling mean alineado a la derecha. Código disponible en https://github.com/rquiroga7/pobreza_eph_estimacion_mensual", width = 150)) +
   scale_color_manual(values = c("black", "red", "orange"))+
+  #Add geom_repel label with value to last value of each line
+# Add geom_repel label with value to last value of each line
+    geom_label_repel(data = df_long %>% group_by(variable) %>% filter(row_number()==n()), 
+                 aes(label = round(value,1)), box.padding = 0.35, point.padding = 0.5, segment.color = 'grey50', 
+                 segment.size = 0.5, size=3,direction="x")+
   theme_light(base_size=14)+
   theme(legend.position = "bottom",legend.title = element_blank())
 ggsave("prediccion_pobreza_mensual.png")
