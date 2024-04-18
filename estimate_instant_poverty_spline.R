@@ -8,9 +8,9 @@ library(stringr)
 library(ggrepel)
 
 # Create a sequence of months
-months <- c(4:12, rep(1:12, 6), 1:9)
+months <- c(4:12, rep(1:12, 6), 1:10)
 # Create a sequence of years
-years <- c(rep(2016, 9), rep(2017:2022, each = 12), rep(2023, 9))
+years <- c(rep(2016, 9), rep(2017:2022, each = 12), rep(2023, 10))
 # Create the data frame
 df <- data.frame(month_begin = months, year_begin = years, poverty = 0)
 # Add columns for the end month and year
@@ -28,7 +28,7 @@ p2019<-c(35.4,35,35,34.8,34.8,35,35.5,35.9,36.1,36.4,38,40)
 p2020<-c(40.9,41.3,42.3,42.9,42.4,42.2,42,42.5,42.5,42.5,41.9,41.4)
 p2021<-c(40.6,40.3,39.8,39.9,39,38.4,37.3,37.2,36,35.4,35.1,36.2)
 p2022<-c(36.5,37.1,37.6,37.9,38.4,38.5,39.2,39.4,39.9,39.8,40.1,40)
-p2023<-c(40.1,40.1,40.1,40,40.6,41.1,42.4,43.7,46.3)
+p2023<-c(40.1,40.1,40.1,40,40.6,41.1,42.4,43.7,46.3,48.3)
 df$poverty<-c(p2016,p2017,p2018,p2019,p2020,p2021,p2022,p2023)
 
 # Convert the date columns to Date type
@@ -90,7 +90,7 @@ df_long$variable <- factor(df_long$variable, levels = c("poverty", "predicted_po
 ggplot(df_long, aes(x = first_day, y = value, color = variable)) +
   geom_borderline(size=1) +
   scale_y_continuous(breaks = seq(0, 60, by = 2.5), minor_breaks = NULL, labels = function(x) paste0(x, "%")) +
-  scale_x_date(limits = c(as.Date("2017-01-01"), as.Date("2024-02-01")), date_labels = "%Y-%m", date_breaks = "2 months",expand=c(0,15)) +
+  scale_x_date(limits = c(as.Date("2017-01-01"), as.Date("2024-03-01")), date_labels = "%Y-%m", date_breaks = "2 months",expand=c(0,15)) +
   labs(title = "Predicción instantánea mensual de la Pobreza en Argentina utilizando Splines", x = "Mes", y = "Pobreza") +
   labs(caption = str_wrap("Por R. Quiroga tomando como base la estimación central del Nowcast de pobreza semestral de Martín Rozada. Se puede observar la predicción mensual en rojo, utilizando el método de Splines 'monoH.FC'. En naranja, se observa el promedio de los últimos seis valores predichos, es decir un rolling mean alineado a la derecha. Código disponible en https://github.com/rquiroga7/pobreza_eph_estimacion_mensual", width = 120)) +
   scale_color_manual(values = c("black", "red", "orange")) +
