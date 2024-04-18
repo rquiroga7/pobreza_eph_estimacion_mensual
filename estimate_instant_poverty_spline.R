@@ -58,7 +58,7 @@ for (i in 3:nrow(df)) {
   spline_interpolation <- splinefun(x = as.numeric(df_subset$median_date), y = df_subset$poverty, method = "monoH.FC")
   #spline_interpolation <- splinefun(x = as.numeric(df_subset$median_date), y = df_subset$poverty, method = "fmm")
   
-  # Predict the poverty value for the date 90 days in the future
+  # Predict the poverty value for the date 75 days in the future (fecha mediana del mes +2 meses y medio para estimar dato promedio del último mes)
   future_date <- df$median_date[i] + 75
   predicted_values[i] <- spline_interpolation(as.numeric(future_date))
 }
@@ -73,9 +73,9 @@ rolling_mean <- rollmean(df$predicted_poverty, k = 6, fill = NA, align = "right"
 df$rolling_mean <- rolling_mean
 
 #Correlation between predicted poverty and actual poverty
-cor(df$rolling_mean[10:81],df$poverty[10:81])
+cor(df$rolling_mean[10:91],df$poverty[10:91])
 #Coefficient of determination between predicted poverty and actual poverty (r2)
-summary(lm(df$rolling_mean[10:81]~df$poverty[10:81]))$r.squared
+summary(lm(df$rolling_mean[10:91]~df$poverty[10:91]))$r.squared
 #This should equal df$poverty[69]
 mean(df$predicted_poverty[85:90])
 df$poverty[90]
